@@ -42,12 +42,12 @@ namespace WindowsFormsApplication1
             string username = textUsername.Text;
             string password = textPassword.Text;
             MySqlConnection koneksi = new MySqlConnection("server=localhost;database=kue;uid=root;pwd=;");
-            MySqlDataAdapter cmd = new MySqlDataAdapter("select count(*) from tbl_user where username = '" + textUsername.Text + "'and Password = '" + textPassword.Text +"'", koneksi);
+            MySqlDataAdapter cmd = new MySqlDataAdapter("select * from tbl_user where username = '" + textUsername.Text + "'and Password = '" + textPassword.Text +"'", koneksi);
             DataTable dt = new DataTable();
             cmd.Fill(dt);
             if(dt.Rows.Count>0)
             {
-                leveluser = dt.Rows[0][0].ToString().Trim();
+                leveluser = dt.Rows[0][4].ToString().Trim();
                 if(leveluser=="admin")
                 {
                     MessageBox.Show("Usernama dan Password are success", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -56,12 +56,20 @@ namespace WindowsFormsApplication1
                     var form = new DashboardAdmin();
                     form.Show();
                 }
-                else
+                else if (leveluser=="manager")
                 {
                     MessageBox.Show("Usernama dan Password are success", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
                     var forms = new DashboardManager();
+                    forms.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Usernama dan Password are success", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.Hide();
+                    var forms = new DashboardKasir();
                     forms.Show();
                 }
             }

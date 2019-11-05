@@ -49,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DashboardKasir.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DashboardKasir.Designer.cs">
+      <DependentUpon>DashboardKasir.cs</DependentUpon>
+    </Compile>
     <Compile Include="DashboardManager.cs">
       <SubType>Form</SubType>
     </Compile>
