@@ -1,0 +1,14 @@
+toko kue :
+- user (admin, manager, kasir)
+- list kue
+- penjualan (kasir)
+- pembelian bahan baku
+- pelaporan (pembelian, penjualan, pembelian terbanyak)
+- e-catalog 
+
+admin : user
+kasir : penjualan
+manager : list kue, pembelian bahan baku, pelaporan
+
+pembelihan bahan baku itu per paket kue (contohnya bahan baku untuk kue lapis)
+e-catalog langsung tersambung dengan list kue
