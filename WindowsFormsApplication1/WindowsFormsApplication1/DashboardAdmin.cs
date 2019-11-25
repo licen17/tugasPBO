@@ -30,12 +30,5 @@ namespace WindowsFormsApplication1
             ListUser listuser = new ListUser();
             listuser.Show();
         }
-
-        private void buttonLogout_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            Login lg = new Login();
-            lg.Show();
-        }
     }
 }

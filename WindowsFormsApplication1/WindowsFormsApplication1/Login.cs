@@ -41,24 +41,24 @@ namespace WindowsFormsApplication1
         {
             string username = textUsername.Text;
             string password = textPassword.Text;
-            MySqlConnection koneksi = new MySqlConnection("server=localhost;database=kue;uid=root;pwd=;");
+            MySqlConnection koneksi = new MySqlConnection("server=localhost;database=toko_kue;uid=root;pwd=;");
             MySqlDataAdapter cmd = new MySqlDataAdapter("select * from tbl_user where username = '" + textUsername.Text + "'and Password = '" + textPassword.Text +"'", koneksi);
             DataTable dt = new DataTable();
             cmd.Fill(dt);
             if(dt.Rows.Count>0)
             {
-                leveluser = dt.Rows[0][4].ToString().Trim();
+                leveluser = dt.Rows[0][3].ToString().Trim();
                 if(leveluser=="admin")
                 {
-                    MessageBox.Show("Usernama dan Password are success", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Usernama dan Password are success, You Login as Admin", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
-                    var form = new DashboardAdmin();
+                    var form = new ListUser();
                     form.Show();
                 }
                 else if (leveluser=="manager")
                 {
-                    MessageBox.Show("Usernama dan Password are success", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Usernama dan Password are success, You login as Manager", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
                     var forms = new DashboardManager();
@@ -66,7 +66,7 @@ namespace WindowsFormsApplication1
                 }
                 else
                 {
-                    MessageBox.Show("Usernama dan Password are success", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Usernama dan Password are success, You login as Cashier", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
                     var forms = new DashboardKasir();
@@ -78,6 +78,58 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("incorrect username and Password", "alter", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void textPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                string username = textUsername.Text;
+                string password = textPassword.Text;
+                MySqlConnection koneksi = new MySqlConnection("server=localhost;database=toko_kue;uid=root;pwd=;");
+                MySqlDataAdapter cmd = new MySqlDataAdapter("select * from tbl_user where username = '" + textUsername.Text + "'and Password = '" + textPassword.Text + "'", koneksi);
+                DataTable dt = new DataTable();
+                cmd.Fill(dt);
+                if (dt.Rows.Count > 0)
+                {
+                    leveluser = dt.Rows[0][3].ToString().Trim();
+                    if (leveluser == "admin")
+                    {
+                        MessageBox.Show("Usernama dan Password are success, You Login as Admin", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        this.Hide();
+                        var form = new ListUser();
+                        form.Show();
+                    }
+                    else if (leveluser == "manager")
+                    {
+                        MessageBox.Show("Usernama dan Password are success, You login as Manager", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        this.Hide();
+                        var forms = new DashboardManager();
+                        forms.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Usernama dan Password are success, You login as Cashier", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        this.Hide();
+                        var forms = new DashboardKasir();
+                        forms.Show();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("incorrect username and Password", "alter", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            var ecat = new Form5();
+            ecat.Show();
         }
     }
 }

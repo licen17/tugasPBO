@@ -30,5 +30,10 @@ namespace WindowsFormsApplication1
             Login lg = new Login();
             lg.Show();
         }
+
+        private void DashboardManager_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

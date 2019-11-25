@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace WindowsFormsApplication1
 {
@@ -19,41 +21,36 @@ namespace WindowsFormsApplication1
             lihatData();
         }
 
-        private string kode_kue;
-        MySqlConnection koneksi = new MySqlConnection("server=localhost;database=kue;uid=root;pwd=;");
+        //private string kode_kue;
+        MySqlConnection koneksi = new MySqlConnection("server=localhost;database=toko_kue;uid=root;pwd=;");
 
-        private void button2_Click(object sender, EventArgs e)
+
+        KueMain kue = new KueMain();
+        string IdKue;
+
+        void ViewData()
         {
+            DataSet data = kue.getData();
+            dataGridView1.DataSource = data;
+            dataGridView1.DataMember = "tbl_kue";
         }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textNamaKue_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonSimpan_Click(object sender, EventArgs e)
         {
-            koneksi.Open();
-            MySqlCommand cmd;
-            cmd = koneksi.CreateCommand();
-            cmd.CommandText = "insert into tbl_kue(kode_kue, nama_kue,ukuran_kue,ket_kue) values (@kode_kue, @nama_kue, @ukuran_kue, @ket_kue)";
-            cmd.Parameters.AddWithValue("@kode_kue", textKodeKue.Text);
-            cmd.Parameters.AddWithValue("@nama_kue", textNamaKue.Text);
-            cmd.Parameters.AddWithValue("@ukuran_kue", textUkuranKue.Text);
-            cmd.Parameters.AddWithValue("@ket_kue", textKetKue.Text);
-            MessageBox.Show("Sukses");
-            cmd.ExecuteNonQuery();
-            textKodeKue.Text = "";
-            textNamaKue.Text = "";
-            textUkuranKue.Text = "";
-            textKetKue.Text = "";
-            lihatData();
-            koneksi.Close();
+            MemoryStream ms = new MemoryStream(img);
+            pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat);
+            byte[] img = ms.ToArray;
+
+
+            ClsKue m = new ClsKue();
+            m.IdKue = textIDKue.Text;
+            m.NamaKue = textNamaKue.Text;
+            m.Idjenis = textJenisKue.Text;
+            m.GambarKue = pictureBox1.Image;
+            m.UkuranKue = textUkuranKue.Text;
+            m.BentukKue = textBentukKue.Text;
+            m.HargaKue = textHargaKue.Text;
+            kue.insertData(m);
+            ViewData();
         }
 
         public void lihatData()
@@ -69,60 +66,60 @@ namespace WindowsFormsApplication1
 
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
-            koneksi.Open();
-            MySqlCommand cmd;
-            cmd = koneksi.CreateCommand();
-            cmd.CommandText = "UPDATE tbl_kue SET kode_kue=@kode_kue, nama_kue=@nama_kue,ukuran_kue=@ukuran_kue,ket_kue=@ket_kue WHERE kode_kue=@kode_kue";
-            cmd.Parameters.AddWithValue("@kode_kue", textKodeKue.Text);
-            cmd.Parameters.AddWithValue("@nama_kue", textNamaKue.Text);
-            cmd.Parameters.AddWithValue("@ukuran_kue", textUkuranKue.Text);
-            cmd.Parameters.AddWithValue("@ket_kue", textKetKue.Text);
-            MessageBox.Show("Sukses");
-            cmd.ExecuteNonQuery();
-            textKodeKue.Text = "";
-            textNamaKue.Text = "";
-            textUkuranKue.Text = "";
-            textKetKue.Text = "";
-            lihatData();
-            koneksi.Close();
+            ClsKue m = new ClsKue();
+            m.IdKue = textIDKue.Text;
+            m.NamaKue = textNamaKue.Text;
+            m.Idjenis = textJenisKue.Text;
+            //m.GambarKue = textGambarKue.Text;
+            m.UkuranKue = textUkuranKue.Text;
+            m.BentukKue = textBentukKue.Text;
+            m.HargaKue = textHargaKue.Text;
+            kue.updateData(m, IdKue);
+            ViewData();
         }
 
         private void buttonHapus_Click(object sender, EventArgs e)
         {
-            koneksi.Open();
-            MySqlCommand cmd;
-            cmd = koneksi.CreateCommand();
-            cmd.CommandText = "DELETE FROM tbl_kue WHERE kode_kue=@kode_kue";
-            cmd.Parameters.AddWithValue("@kode_kue", textKodeKue.Text);
-            MessageBox.Show("Sukses");
-            cmd.ExecuteNonQuery();
-            textKodeKue.Text = "";
-            textNamaKue.Text = "";
-            textUkuranKue.Text = "";
-            textKetKue.Text = "";
-            lihatData();
-            koneksi.Close();
+
+            ClsKue m = new ClsKue();
+            m.IdKue = textIDKue.Text;
+            m.NamaKue = textNamaKue.Text;
+            m.Idjenis = textJenisKue.Text;
+            //m.GambarKue = textGambarKue.Text;
+            m.UkuranKue = textUkuranKue.Text;
+            m.BentukKue = textBentukKue.Text;
+            m.HargaKue = textHargaKue.Text;
+            kue.deleteData(m.IdKue);
+            ViewData();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView1.SelectedCells.Count > 0)
             {
+
+                Byte img = (Byte[])dataGridView1.CurrentRow.Cells[3].Value();
+                MemoryStream ms = new MemoryStream(img);
+
                 buttonSimpan.Enabled = false;
-                textKodeKue.Text = dataGridView1.CurrentRow.Cells[0].Value.ToString();
+
+                textIDKue.Text = dataGridView1.CurrentRow.Cells[0].Value.ToString();
                 textNamaKue.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                textUkuranKue.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                textKetKue.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
+                textJenisKue.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+                textUkuranKue.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
+                textBentukKue.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
+                textHargaKue.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
+                pictureBox1.Image = Image.FromStream(ms);
             }
         }
 
         private void buttonBatal_Click(object sender, EventArgs e)
         {
             buttonSimpan.Enabled = true;
-            textKodeKue.Text = "";
+            textIDKue.Text = "";
             textNamaKue.Text = "";
             textUkuranKue.Text = "";
-            textKetKue.Text = "";
+            textJenisKue.Text = "";
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
@@ -161,9 +158,7 @@ namespace WindowsFormsApplication1
 
         private void buttonDashboard_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            DashboardAdmin dsh = new DashboardAdmin();
-            dsh.Show();
+
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -171,6 +166,23 @@ namespace WindowsFormsApplication1
             this.Hide();
             ListKue listkue = new ListKue();
             listkue.Show();
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog opf = new OpenFileDialog();
+
+            opf.Filter = "Choose Image(*.JPG;*.PNG;)|*.JPG;*.PNG";
+
+            if (opf.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox1.Image = Image.FromFile(opf.FileName);
+            }
         }
     }
 }
